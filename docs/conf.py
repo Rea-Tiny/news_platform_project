@@ -2,14 +2,12 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+
 import os
 import sys
 import django
 
-# If conf.py is in docs/source/, use '../..' to reach project root.
-# If conf.py is in docs/, use '..'
-sys.path.insert(0, os.path.abspath('../..'))
-
+sys.path.insert(0, os.path.abspath('..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'news_platform.settings'
 django.setup()
 
@@ -19,15 +17,17 @@ django.setup()
 project = 'news_platform'
 copyright = '2026, Rea'
 author = 'Rea'
-release = '1.0.0'
+release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = [
+    'sphinx.ext.autodoc',
+]
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 
