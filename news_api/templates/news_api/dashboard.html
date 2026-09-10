@@ -1,0 +1,113 @@
+{% extends 'news_api/base.html' %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<p>Welcome back, <strong>{{ user.username }}</strong>! Role: <span class="badge">{{ user.role }}</span></p>
+
+<hr>
+
+{% if user.role == 'journalist' %}
+    <h3>Journalist Portal: Submit New Article</h3>
+    <form method="post" action="{ url 'create_article' %}">
+        {% csrf_token %}
+        <div>
+            <label>Title</label>
+            <input type="text" name="title" required>
+        </div>
+        <div>
+            <label>Content</label>
+            <textarea name="content" rows="5" required></textarea>
+        </div>
+        <div>
+            <label>Publisher</label>
+            <select name="publisher_id" required>
+                {% for pub in publishers %}
+                    <option value="{{ pub.id }}">{{ pub.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn">Submit for Approval</button>
+    </form>
+
+    <hr>
+    <h3>Create Newsletter</h3>
+    <form method="post" action="{% url 'create_newsletter' %}">
+        {% csrf_token %}
+        <div>
+            <label>Title</label>
+            <input type="text" name="title" required>
+        </div>
+        <div>
+            <label>Content</label>
+            <textarea name="content" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn">Publish Newsletter</button>
+    </form>
+
+{% elif user.role == 'editor' %}
+    <h3>Editor Portal: Add Publisher</h3>
+    <form method="post" action="{%url 'create_publisher' %}">
+        {% csrf_token %}
+        <div>
+            <label>Publisher Name</label>
+            <input type="text" name="name" required>
+        </div>
+        <button type="submit" class="btn">Register Publisher</button>
+    </form>
+
+     <hr>
+    <h3>Create Newsletter</h3>
+    <form method="post" action="{% url 'create_newsletter' %}">
+        {% csrf_token %}
+        <div>
+            <label>Title</label>
+            <input type="text" name="title" required>
+        </div>
+        <div>
+            <label>Content</label>
+            <textarea name="content" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn">Publish Newsletter</button>
+    </form>
+
+    <hr>
+    <h3>Pending Article Approvals</h3>
+    {% if pending_articles %}
+        {% for articles in pending_articles %}
+            <div class="card">
+                <h4>{{ article.title }}</h4>
+                <p>{{ article.content }}</p>
+                <form method="post" action="{% url 'approve_article_web' article.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="background:green;">Approve Article</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% else %}
+    <h3>Reader Portal: Subscribed News Feed</h3>
+    {% if articles %}
+        {% for article in articles %}
+            <div class="card">
+                <h4>{{ article.title }}</h4>
+                <p>{{ article.content }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No subscribed articles available.</p>
+    {% endif %}
+
+    <hr>
+    <h3>Newsletter</h3>
+    {% if newsletters %}
+        {% for newsletter in newsletters %}
+            <div class="card">
+                <h4>{{ newsletter.title }}</h4><p>{{ newsletter.content }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No newsletters available.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

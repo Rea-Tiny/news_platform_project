@@ -1,24 +1,33 @@
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import requests 
+import requests
+
 from .models import Article
+
 
 @receiver(post_save, sender=Article)
 def handle_article_approval(sender, instance, created, updated_fields, **kwargs):
-    #Only act if article is approved
+    """Send email notifications when an article is approved."""
     if instance.approved:
         emails = set()
+
+        # Collect email addresses of users subscribed to publisher
         if instance.publisher:
-            emails.update(
-                instance.publisher.subscribes.value_list("email", flat=True)
+            publisher_emails = instance.publisher.subsribed.values_list(
+                "email", flat=True
             )
-        if instance.author:
-            emails.update(
-                instance.author.subscribers.value_list("email", flat=True)
+            emails.update(publisher_emails)
+
+        # Collect email addresses of users subscribed to the author
+        if instance.author and hasattr(instance.author, "subscribers"):
+            author_emails = instance.author.subscribers.values_list(
+                "email", flat=True
             )
+            emails.update(author_emails)
 
         recipients_list = [e for e in emails if e]
+        
         if recipients_list:
             send_mail(
                 subject=f"New Approved Article: {instance.title}",

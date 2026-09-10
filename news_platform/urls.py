@@ -17,10 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
-from news_api.views import home_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('news_api.urls')),
-    path('api/', include('news_api.urls')),
 ]

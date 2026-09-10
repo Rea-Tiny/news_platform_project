@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    <title>News Platform</title>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; max-width: 900x; margin: 30px auto; padding: 0 20px; color: #222; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 15px; margin-bottom: 25px; }
+        nav a { margin-left: 15px; text-decoration: none; color: #0066cc; font-weight: bold; }
+        .card { background: #f4f4f4; border-left: 4px solid #0066cc; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
+        .badge { display: inline-block; background: #333; color: #fff; padding: 3px 8px; font-size: 12px; border-radius: 3px; }
+        .btn { background: #0066cc; color: white; padding: 8px 12px; border: none; border-radius: 4px; text-decoration: none; cursor: pointer; display: inline-block; margin-top: 5px; }
+        form div { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2><a href="{% url 'home' %}" style="text-decoration:none; color:#222;">News Platform</a></h2>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <span>({{ user.username }} -<span class="badge">{{ user.role|default:"User" }}</span>)</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+</html>

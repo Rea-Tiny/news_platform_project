@@ -1,0 +1,17 @@
+{% extends 'news_api/base.html' %}
+
+{% block content %}
+<h2>Latest Published News</h2>
+{% if articles %}
+    {% for article in articles %}
+        <div class="card">
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.content }}</p>
+            <small>By {{ article.author.username }} | Publisher: {{ article.publisher.name }}</small>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No published articles found.</p>
+{% endif %}
+{% endblock %}
+    

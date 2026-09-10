@@ -69,6 +69,10 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
+
 WSGI_APPLICATION = "news_platform.wsgi.application"
 
 
